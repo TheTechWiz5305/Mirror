@@ -73,6 +73,9 @@ namespace Mirror
         [Range(0, 60), Tooltip("Optional delay that can be used after disconnecting to show a 'Connection lost...' message or similar before loading the offline scene, which may take a long time in big projects.")]
         public float offlineSceneLoadDelay = 0;
 
+        [Tooltip("If Mirror shall keep the same Network Manager on disconnect, and not make a new one.")]
+        public bool keepOnDisconnect = true;
+
         // transport layer
         [Header("Network Info")]
         [Tooltip("Transport component attached to this object that server and client will use to connect")]
@@ -604,7 +607,7 @@ namespace Mirror
             if (gameObject != null
                 && gameObject.scene.name == "DontDestroyOnLoad"
                 && !string.IsNullOrWhiteSpace(offlineScene)
-                && SceneManager.GetActiveScene().path != offlineScene)
+                && SceneManager.GetActiveScene().path != offlineScene && !keepOnDisconnect)
                 SceneManager.MoveGameObjectToScene(gameObject, SceneManager.GetActiveScene());
 
             OnStopServer();
@@ -1298,7 +1301,7 @@ namespace Mirror
             if (gameObject != null
                 && gameObject.scene.name == "DontDestroyOnLoad"
                 && !string.IsNullOrWhiteSpace(offlineScene)
-                && SceneManager.GetActiveScene().path != offlineScene)
+                && SceneManager.GetActiveScene().path != offlineScene && !keepOnDisconnect)
                 SceneManager.MoveGameObjectToScene(gameObject, SceneManager.GetActiveScene());
 
             // If StopHost called in Host mode, StopServer will change scenes after this.
